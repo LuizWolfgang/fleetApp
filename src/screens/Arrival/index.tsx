@@ -59,7 +59,7 @@ export function Arrival() {
         historic.isSync = false;
       });
 
-      Alert.alert('Chegada', 'Chegada registrada com sucesso');
+      Alert.alert('Chegada', 'Chegada registrada com sucesso.');
       goBack();
     } catch (error) {
       Alert.alert('Erro', "Não foi possível registar a chegada do veículo.")
