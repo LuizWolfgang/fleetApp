@@ -8,13 +8,15 @@ import { useUser } from '@realm/react';
 
 import { useRealm } from '../../libs/realm';
 import { Historic } from '../../libs/realm/schemas/Historic';
-import { LocationAccuracy, LocationSubscription, useForegroundPermissions, watchHeadingAsync, watchPositionAsync } from 'expo-location';
+
+import { LocationAccuracy, LocationObjectCoords, LocationSubscription, useForegroundPermissions, watchHeadingAsync, watchPositionAsync } from 'expo-location';
 import { Button } from '../../components/Button';
 import { Header } from '../../components/Header';
 import { Loading } from '../../components/Loading';
 import { LocationInfo } from '../../components/LocationInfo';
 import { LicensePlateInput } from '../../components/LicensePlateInput';
 import { TextAreaInput } from '../../components/TextAreaInput';
+import { Map } from '../../components/MapView'
 
 
 import { Container, Content, Message } from './styles';
@@ -32,6 +34,7 @@ export function Departure() {
   const [isRegistering, setIsResgistering] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
   const [currentAddress, setCurrentAddress] = useState<string | null>(null)
+  const [currentCoords, setCurrentCoords] = useState<LocationObjectCoords | null>(null)
   const [locationForegroundPermission, requestLocationForegroundPermission] = useForegroundPermissions();
   const realm = useRealm();
   const user = useUser();
@@ -92,6 +95,7 @@ export function Departure() {
       accuracy: LocationAccuracy.High,
       timeInterval: 1000
     }, (location) => {
+      setCurrentCoords(location.coords)
       getAddressLocation(location.coords)
       .then(address => {
         if(address){
@@ -131,6 +135,7 @@ export function Departure() {
       <Header title='Saída' />
 
       <KeyboardAwareScrollView extraHeight={100}>
+      { currentCoords && <Map coordinates={[currentCoords]} /> }
         <ScrollView>
           <Content>
             { 
