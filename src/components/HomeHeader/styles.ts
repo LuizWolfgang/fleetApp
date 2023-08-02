@@ -8,6 +8,8 @@ export const Container = styled.View`
   align-items: center;
 
   background-color: ${({ theme }) => theme.COLORS.GRAY_700};
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px ;
 `;
 
 export const Greeting = styled.View`
@@ -17,7 +19,7 @@ export const Greeting = styled.View`
 
 export const Message = styled.Text`
   color: ${({ theme }) => theme.COLORS.GRAY_100};
-  font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
 `;
 

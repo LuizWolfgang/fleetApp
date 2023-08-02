@@ -9,7 +9,15 @@ import { useUser } from '@realm/react';
 import { useRealm } from '../../libs/realm';
 import { Historic } from '../../libs/realm/schemas/Historic';
 
-import { LocationAccuracy, LocationObjectCoords, LocationSubscription, useForegroundPermissions, watchHeadingAsync, watchPositionAsync } from 'expo-location';
+import { 
+    requestBackgroundPermissionsAsync,
+    LocationAccuracy, 
+    LocationObjectCoords, 
+    LocationSubscription,
+    useForegroundPermissions,
+    watchPositionAsync
+} from 'expo-location';
+
 import { Button } from '../../components/Button';
 import { Header } from '../../components/Header';
 import { Loading } from '../../components/Loading';
@@ -25,6 +33,7 @@ import { licensePlateValidate } from '../../utils/licensePlateValidate';
 
 import { getAddressLocation } from '../../utils/getAddressLocation';
 import { Car } from 'phosphor-react-native';
+import { startLocationTask } from '../../tasks/backgroundTaskLocation';
 
 
 export function Departure() {
@@ -44,7 +53,7 @@ export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
   const licensePlateRef = useRef<TextInput>(null);
 
-  function handleDepartureRegister() {
+  async function handleDepartureRegister() {
     try {
       if(!licensePlateValidate(licensePlate)) {
         licensePlateRef.current?.focus();
@@ -56,7 +65,21 @@ export function Departure() {
         return Alert.alert('Finalidade', 'Por favor, informe a finalidade da utilização do veículo')
       }
 
+
+      if(!currentCoords?.latitude && !currentCoords?.longitude) {
+        return Alert.alert('Localização', 'Não foi possível obter a localização atual. Tente novamente.')
+      }
+
+      const backgroundPermissions = await requestBackgroundPermissionsAsync()
+
+      if(!backgroundPermissions.granted) {
+        setIsResgistering(false)
+        return Alert.alert('Localização', 'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."')
+      }
+
       setIsResgistering(false);
+
+      await startLocationTask();
 
       realm.write(() => {
         realm.create('Historic', Historic.generate({

@@ -26,7 +26,7 @@ export function HomeHeader() {
       />
       <Greeting>
         <Message>
-          Olá
+          Motorista
         </Message>
 
         <Name>

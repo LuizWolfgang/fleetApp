@@ -16,6 +16,7 @@ import { Container, Content, Label, Title } from './styles';
 import { api } from '../../services/api';
 import { useNetInfo } from '@react-native-community/netinfo';
 import Toast from 'react-native-toast-message';
+import { SearchInput } from '../../components/SearchInput';
 
 
 export function Home() {
@@ -147,6 +148,8 @@ export function Home() {
         <Title>
           Histórico
         </Title>
+
+        <SearchInput/>
 
         <FlatList 
           data={vehicleHistoric}
