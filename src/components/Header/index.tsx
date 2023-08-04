@@ -15,7 +15,7 @@ export function Header({ title } : Props) {
   const { goBack } = useNavigation()
   const insets = useSafeAreaInsets();
 
-  const paddingTop = insets.top + 42;
+  const paddingTop = insets.top + 15;
 
   return (
     <Container style={{ paddingTop }}>

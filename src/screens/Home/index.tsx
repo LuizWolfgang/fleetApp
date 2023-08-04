@@ -28,7 +28,6 @@ export function Home() {
   const realm = useRealm();
   const netInfo = useNetInfo();
 
-
   function handleRegisterMoviment() {
     if(vehicleInUse?._id) {
       navigate('arrival', { id: vehicleInUse._id.toString() });
@@ -61,6 +60,7 @@ export function Home() {
           licensePlate: item.license_plate,
           description: item.description,
           isSync: item.isSync,
+          coordinates: item.coords,
           created: dayjs(item.created_at).format('[Saída em] DD/MM/YYYY [às] HH:mm')
         })
       })
@@ -82,7 +82,8 @@ export function Home() {
             licensePlate: data.licensePlate,
             description: data.description,
             created: data.created,
-            isSync: true
+            coordinates: data.coordinates,
+            isSync: true,
            })
 
            console.log('Dados enviados para API ✅');

@@ -1,6 +1,7 @@
 import { createRealmContext } from '@realm/react';
 
 import { Historic } from './schemas/Historic';
+import { Coords } from './schemas/Coords';
 
 export const {
   RealmProvider,
@@ -8,5 +9,6 @@ export const {
   useQuery,
   useObject
 } = createRealmContext({
-  schema: [Historic]
+  schema: [Historic, Coords],
+  schemaVersion: 1
 });

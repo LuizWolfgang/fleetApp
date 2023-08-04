@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TextInput, ScrollView, Alert } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import { openSettings } from '../../utils/openSettings';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '@realm/react';
 
@@ -27,7 +27,7 @@ import { TextAreaInput } from '../../components/TextAreaInput';
 import { Map } from '../../components/MapView'
 
 
-import { Container, Content, Message } from './styles';
+import { Container, Content, Message, MessageContent } from './styles';
 
 import { licensePlateValidate } from '../../utils/licensePlateValidate';
 
@@ -74,22 +74,31 @@ export function Departure() {
 
       if(!backgroundPermissions.granted) {
         setIsResgistering(false)
-        return Alert.alert('Localização', 'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."')
+        return Alert.alert(
+          'Localização', 
+          'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."',
+          [{ text: 'Abrir configurações', onPress: openSettings }]
+        )
       }
 
       setIsResgistering(false);
 
       await startLocationTask();
-
+      
       realm.write(() => {
         realm.create('Historic', Historic.generate({
           user_id: user!.id,
           license_plate: licensePlate,
           description,
+          coords:[{
+            latitude: currentCoords.latitude,
+            longitude: currentCoords.longitude,
+            timestamp: new Date().getTime()
+          }],
           isSync: false,
         }))
       });
-
+      
       Alert.alert('Saída', 'Saída do veículo registrada com sucesso.');
 
       goBack();
@@ -116,9 +125,10 @@ export function Departure() {
 
     watchPositionAsync({
       accuracy: LocationAccuracy.High,
-      timeInterval: 1000
+      timeInterval: 1000 
     }, (location) => {
       setCurrentCoords(location.coords)
+      
       getAddressLocation(location.coords)
       .then(address => {
         if(address){
@@ -139,11 +149,15 @@ export function Departure() {
     return (
       <Container>
         <Header title='Saída' />
-        <Message>
-          Você precisa permitir que o aplicativo tenha acesso a 
-          localização para acessar essa funcionalidade. Por favor, acesse as
-          configurações do seu dispositivo para conceder a permissão ao aplicativo.
-        </Message>
+        <MessageContent>
+          <Message>
+            Você precisa permitir que o aplicativo tenha acesso a 
+            localização para acessar essa funcionalidade. Por favor, acesse as
+            configurações do seu dispositivo para conceder a permissão ao aplicativo.
+          </Message>
+
+          <Button title='Abrir configurações' onPress={openSettings} />
+        </MessageContent>
       </Container>
     )
   }
@@ -152,7 +166,6 @@ export function Departure() {
     return <Loading />
   }
 
-  
   return (
     <Container>
       <Header title='Saída' />

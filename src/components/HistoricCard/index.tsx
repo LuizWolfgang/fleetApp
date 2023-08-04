@@ -12,6 +12,7 @@ export type HistoricCardProps = {
   licensePlate: string;
   created: string;
   isSync: boolean;
+  coordinates: string;
 }
 
 type Props = TouchableOpacityProps & {
