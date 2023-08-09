@@ -52,7 +52,7 @@ export function SignIn() {
 
   return (
     <Container source={backgroundImg}>
-      <Title>Ignite Fleet</Title>
+      <Title>FleetApp</Title>
 
       <Slogan>
         Gestão de uso de veículos

@@ -4,7 +4,7 @@ import { X } from 'phosphor-react-native';
 
 import { useObject, useRealm } from '../../libs/realm';
 import { Historic } from '../../libs/realm/schemas/Historic';
-import { getStorageLocation } from '../../libs/asyncStorage/locationStorage';
+import { getStorageLocation, removeStorageLocations } from '../../libs/asyncStorage/locationStorage';
 
 import { BSON } from 'realm';
 import { useEffect, useState } from 'react';
@@ -85,6 +85,7 @@ export function Arrival() {
       await stopLocationTask();
 
       Alert.alert('Chegada', 'Chegada registrada com sucesso.');
+      removeStorageLocations();
       goBack();
     } catch (error) {
       Alert.alert('Erro', "Não foi possível registar a chegada do veículo.")
